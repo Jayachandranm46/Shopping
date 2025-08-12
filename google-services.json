@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "572162737756",
+    "project_id": "adsmail-c113a",
+    "storage_bucket": "adsmail-c113a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572162737756:android:28872ec051ab93a1e18899",
+        "android_client_info": {
+          "package_name": "com.ads.adsmail"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDblvJWkbHvN_ksoN0Ub160mwwh7mW2-V4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
