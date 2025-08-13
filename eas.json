@@ -1,7 +1,6 @@
 {
   "cli": {
-    "version": ">= 2.0.0",
-    "projectDir": "Shoping"
+    "version": ">= 2.0.0"
   },
   "build": {
     "preview": {
