@@ -1,4 +1,4 @@
-// src/screens/CalendarScreen.tsx
+
 import React, { useState, useEffect, useCallback } from "react";
 import { 
   View, 
@@ -8,22 +8,44 @@ import {
   Dimensions, 
   ScrollView,
   Alert,
+  Image
 } from "react-native";
 import { Calendar, DateData, MarkedDates } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
+type SubscriptionData = {
+  id: string;
+  title: string;
+  color: string;
+  baseDiscount: number;
+};
+
 type RootStackParamList = {
   Calendar: {
-    type: string;
-    subscriptionData: {
-      id: string;
-      title: string;
-      color: string;
-      baseDiscount: number;
-    };
+    type: "random" | "weekend" | "weekdays";
+    subscriptionData: SubscriptionData;
   };
-  MapPicker: { subscriptionSummary: any };
+  MapPicker: { subscriptionSummary: SubscriptionSummary };
+  ProductList: { subscription: FinalSubscription };
+  SubscriptionOptions: undefined;
+};
+
+type SubscriptionSummary = {
+  type: "random" | "weekend" | "weekdays";
+  subscriptionData: SubscriptionData;
+  selectedDays: string[];
+  totalDiscount: number;
+  daysCount: number;
+};
+
+type FinalSubscription = SubscriptionSummary & {
+  deliveryLocation: {
+    latitude: number;
+    longitude: number;
+    address: string;
+    timestamp: string;
+  };
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Calendar">;
@@ -33,10 +55,10 @@ const { width } = Dimensions.get("window");
 export default function CalendarScreen({ route, navigation }: Props) {
   const { type, subscriptionData } = route.params;
   
-
   const [selectedDays, setSelectedDays] = useState<Set<string>>(new Set());
   const [totalDiscount, setTotalDiscount] = useState(subscriptionData.baseDiscount);
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
+
 
   const BONUS_DISCOUNTS = [
     { minDays: 10, bonus: 15 },
@@ -59,7 +81,6 @@ export default function CalendarScreen({ route, navigation }: Props) {
 
   useEffect(() => {
     if (type === "random") {
- 
       setSelectedDays(new Set());
       setMarkedDates({});
       return;
@@ -97,17 +118,14 @@ export default function CalendarScreen({ route, navigation }: Props) {
   }, [type, subscriptionData.color]);
 
 
-  const handleDayPress = (day: DateData) => {
+  const handleDayPress = useCallback((day: DateData) => {
     if (type !== "random") {
       Alert.alert(
         "Fixed Schedule",
         `${subscriptionData.title} has a fixed schedule. Switch to Random Days subscription to customize dates.`,
         [
           { text: "OK" },
-          {
-            text: "Switch Plan",
-            onPress: () => navigation.goBack(),
-          },
+          { text: "Switch Plan", onPress: () => navigation.goBack() },
         ]
       );
       return;
@@ -138,7 +156,8 @@ export default function CalendarScreen({ route, navigation }: Props) {
 
     setSelectedDays(newSelectedDays);
     setMarkedDates(newMarkedDates);
-  };
+  }, [selectedDays, subscriptionData.color, type, navigation]);
+
 
   useEffect(() => {
     const count = selectedDays.size;
@@ -156,13 +175,13 @@ export default function CalendarScreen({ route, navigation }: Props) {
   }, [selectedDays, subscriptionData.baseDiscount]);
 
 
-  const handleConfirmAndProceed = () => {
+  const handleConfirmAndProceed = useCallback(() => {
     if (selectedDays.size === 0) {
       Alert.alert("No Days Selected", "Please select at least one delivery day.");
       return;
     }
 
-    const subscriptionSummary = {
+    const subscriptionSummary: SubscriptionSummary = {
       type,
       subscriptionData,
       selectedDays: Array.from(selectedDays).sort(),
@@ -171,8 +190,7 @@ export default function CalendarScreen({ route, navigation }: Props) {
     };
 
     navigation.navigate("MapPicker", { subscriptionSummary });
-  };
-
+  }, [selectedDays, subscriptionData, totalDiscount, navigation, type]);
 
   const getDiscountColor = () => {
     if (totalDiscount >= 20) return "#e74c3c";
@@ -182,10 +200,7 @@ export default function CalendarScreen({ route, navigation }: Props) {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-  
-
- 
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
       <View style={styles.instructionCard}>
         <Ionicons 
           name={type === "random" ? "hand-left" : "information-circle"} 
@@ -230,10 +245,17 @@ export default function CalendarScreen({ route, navigation }: Props) {
         />
       </View>
 
-
       <View style={styles.summaryCard}>
         <View style={styles.summaryHeader}>
-          <Ionicons name="calendar" size={24} color={subscriptionData.color} />
+          {/* <Ionicons name="calendar" size={24} color={subscriptionData.color} /> */}
+            <Image
+                        source={require('../../assets/calender.jpg')}
+                        style={{
+                          width: 20,
+                          height: 20,
+                      //  tintColor:'#fff'
+                        }}
+                      />
           <Text style={styles.summaryTitle}>Subscription Summary</Text>
         </View>
 
@@ -273,13 +295,13 @@ export default function CalendarScreen({ route, navigation }: Props) {
         </View>
       </View>
 
-
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.confirmButton, { backgroundColor: subscriptionData.color }]}
           onPress={handleConfirmAndProceed}
           activeOpacity={0.8}
           accessibilityLabel="Confirm and select delivery location"
+          accessibilityRole="button"
         >
           <Ionicons name="location" size={22} color="#fff" />
           <Text style={styles.buttonText}>Confirm & Select Location</Text>
@@ -294,30 +316,6 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: "#f8f9fa" 
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ecf0f1",
-  },
-  backButton: {
-    marginRight: 12,
-  },
-  headerContent: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#2c3e50",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#7f8c8d",
-    marginTop: 2,
   },
   instructionCard: {
     flexDirection: "row",

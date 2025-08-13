@@ -40,7 +40,16 @@ export default function CartScreen({ navigation }: any) {
                   style={styles.removeBtn}
                   onPress={() => removeFromCart(item.id)}
                 >
-                  <Ionicons name="trash-outline" size={22} color="#fff" />
+                  {/* <Ionicons name="trash-outline" size={22} color="#fff" /> */}
+                      <Image 
+                          source={require('../../assets/delete.png')}
+                          style={{
+                            width:20,
+                            height:20,
+                            tintColor: '#fff',
+                            // margi`nRight:2
+                          }}
+                          />
                 </TouchableOpacity>
               </View>
             )}

@@ -35,7 +35,16 @@ export default function ProductCard({ product, onPress, onAddToCart }: ProductCa
 
       </View>
       <TouchableOpacity style={styles.cartButton} onPress={onAddToCart}>
-        <Ionicons name="cart" size={20} color="#fff" />
+        {/* <Ionicons name="cart" size={20} color="#fff" /> */}
+        <Image 
+        source={require('../../assets/addtocard.png')}
+        style={{
+          width:20,
+          height:20,
+          tintColor: '#fff',
+       right:1
+        }}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -95,5 +104,7 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 50,
     elevation: 2,
+    justifyContent:'center',
+    alignItems:'center'
   },
 });

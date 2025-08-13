@@ -1,8 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabaseSync('products.db');
-
-// Helper function to execute SQL with error handling
 const executeSql = async (sql: string, params: any[] = []) => {
   try {
     return await db.execAsync(sql, params);
@@ -38,12 +36,9 @@ export const createProductsTable = async () => {
 
 export const saveProductsToDb = async (products: any[]) => {
   try {
-    // Use withTransactionAsync for proper transaction management
     await db.withTransactionAsync(async () => {
-      // Clear existing products
       await db.runAsync('DELETE FROM products');
-      
-      // Prepare the insert statement
+
       const insertStatement = `
         INSERT INTO products (
           id, title, description, price, discountPercentage,
@@ -51,7 +46,7 @@ export const saveProductsToDb = async (products: any[]) => {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       
-      // Insert all products
+ 
       for (const product of products) {
         await db.runAsync(insertStatement, [
           product.id,
@@ -76,14 +71,14 @@ export const saveProductsToDb = async (products: any[]) => {
   }
 };
 
-// Alternative batch insert method for better performance with large datasets
+
 export const saveProductsToDbBatch = async (products: any[]) => {
   try {
     await db.withTransactionAsync(async () => {
-      // Clear existing products
+
       await db.runAsync('DELETE FROM products');
       
-      // Prepare batch insert data
+    
       const insertStatement = `
         INSERT INTO products (
           id, title, description, price, discountPercentage,
@@ -91,7 +86,7 @@ export const saveProductsToDbBatch = async (products: any[]) => {
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       
-      // Use prepared statement for better performance
+
       const statement = await db.prepareAsync(insertStatement);
       
       try {
@@ -135,7 +130,7 @@ export const loadProductsFromDb = async () => {
   }
 };
 
-// Additional utility functions
+
 export const getProductById = async (id: number) => {
   try {
     const result = await db.getFirstAsync<any>(

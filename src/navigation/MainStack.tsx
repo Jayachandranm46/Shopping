@@ -1,7 +1,6 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Expo vector icons import
-
+import { TouchableOpacity,Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons"; 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types";
 
@@ -28,7 +27,15 @@ export default function MainStack() {
               style={{ marginRight: 15 }}
               onPress={() => navigation.navigate("Cart")}
             >
-              <Ionicons name="cart-outline" size={24} color="gray" />
+                    <Image 
+                     source={require('../../assets/addtocard.png')}
+                     style={{
+                       width:25,
+                       height:25,
+                       tintColor: 'gray',
+                       // marginRight:2
+                     }}
+                     />
             </TouchableOpacity>
           ),
         })}

@@ -24,7 +24,7 @@ export default function ProductListScreen({ navigation }: any) {
   const limit = 20;
   const { addToCart } = useContext(CartContext);
 
-  // Initialize database and check network status
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -64,28 +64,22 @@ export default function ProductListScreen({ navigation }: any) {
       }
 
       if (isOnline) {
-        console.log('Loading products online...');
-        // Try to fetch from API first
+  
         const data = await fetchProductsFromApi(limit, reset ? 0 : skip);
         
         if (reset) {
           setProducts(data.products);
-          // Save all products to database (replacing existing ones)
           if (data.products.length > 0) {
             await saveProductsToDb(data.products);
           }
         } else {
           setProducts(prev => [...prev, ...data.products]);
-          // Note: For pagination, you might want to append to existing data
-          // instead of replacing. Consider implementing an "upsert" function
         }
         
         setTotal(data.total);
         setSkip(prev => prev + limit);
         
       } else {
-        console.log('Loading products offline...');
-        // Offline mode - load from SQLite
         const dbProducts = await loadProductsFromDb();
         const cachedCount = await getProductCount();
         
@@ -94,7 +88,6 @@ export default function ProductListScreen({ navigation }: any) {
           setTotal(cachedCount);
           setSkip(cachedCount);
         } else {
-          // For offline pagination, slice the cached results
           const startIndex = products.length;
           const endIndex = startIndex + limit;
           const nextBatch = dbProducts.slice(startIndex, endIndex);
@@ -113,9 +106,7 @@ export default function ProductListScreen({ navigation }: any) {
         }
       }
     } catch (error) {
-      console.error("Failed to load products:", error);
-      
-      // If online fetch fails, try to load from cache as fallback
+
       if (isOnline) {
         try {
           console.log('API failed, trying to load from cache...');
@@ -156,7 +147,7 @@ export default function ProductListScreen({ navigation }: any) {
     }
   }, [isInitialized, isOnline, skip, limit, products.length]);
 
-  // Load products when database is initialized or network status changes
+
   useEffect(() => {
     if (isInitialized) {
       loadProducts(true);

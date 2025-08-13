@@ -32,10 +32,7 @@ export default function ProductDetailsScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Main product image */}
         <Image source={{ uri: product.thumbnail }} style={styles.image} />
-
-        {/* Additional product images */}
         <FlatList
           data={product.images}
           keyExtractor={(item, index) => index.toString()}
@@ -58,8 +55,6 @@ export default function ProductDetailsScreen({ route, navigation }: Props) {
           ) : null}
 
           <Text style={styles.description}>{product.description}</Text>
-
-          {/* Additional Details */}
           <Text style={styles.label}>Category: <Text style={styles.value}>{product.category}</Text></Text>
           <Text style={styles.label}>Brand: <Text style={styles.value}>{product.brand}</Text></Text>
           <Text style={styles.label}>SKU: <Text style={styles.value}>{product.sku}</Text></Text>
@@ -82,12 +77,12 @@ export default function ProductDetailsScreen({ route, navigation }: Props) {
           <Text style={styles.label}>Return Policy: <Text style={styles.value}>{product.returnPolicy}</Text></Text>
           <Text style={styles.label}>Minimum Order Quantity: <Text style={styles.value}>{product.minimumOrderQuantity}</Text></Text>
 
-          {/* QR Code */}
+    
           {product.meta?.qrCode ? (
             <Image source={{ uri: product.meta.qrCode }} style={styles.qrCode} />
           ) : null}
 
-          {/* Reviews */}
+  
           <Text style={[styles.title, { marginTop: 20 }]}>Reviews</Text>
           {product.reviews && product.reviews.length > 0 ? (
             product.reviews.map((review, idx) => (
@@ -108,11 +103,27 @@ export default function ProductDetailsScreen({ route, navigation }: Props) {
           style={styles.cartButton}
           onPress={() => navigation.navigate("Cart")}
         >
-          <Ionicons name="cart-outline" size={24} color="#fff" />
+              <Image 
+                  source={require('../../assets/addtocard.png')}
+                  style={{
+                    width:20,
+                    height:20,
+                    tintColor: '#fff',
+                    // marginRight:2
+                  }}
+                  />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.addButton} onPress={handlecart}>
-          <Ionicons name="add" size={20} color="#fff" />
+              <Image 
+                  source={require('../../assets/addtocard.png')}
+                  style={{
+                    width:20,
+                    height:20,
+                    tintColor: '#fff',
+                    // marginRight:2
+                  }}
+                  />
           <Text style={styles.addText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>

@@ -22,7 +22,11 @@
       "useNextNotificationsApi": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show it on the map.",
-        "NSUserNotificationUsageDescription": "This app uses notifications to alert you of important updates."
+        "NSUserNotificationUsageDescription": "This app uses notifications to alert you of important updates.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyDble_K0mf6i9MqVCJSfVVaSAohw2WJ0uc"
       }
     },
     "android": {
@@ -30,7 +34,9 @@
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
@@ -41,7 +47,7 @@
       "edgeToEdgeEnabled": true,
       "config": {
         "googleMaps": {
-          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+          "apiKey": "AIzaSyDble_K0mf6i9MqVCJSfVVaSAohw2WJ0uc"
         }
       },
       "notification": {
@@ -54,7 +60,8 @@
     },
     "plugins": [
       "expo-sqlite",
-      "expo-asset"
+      "expo-asset",
+      "expo-location"
     ],
     "extra": {
       "eas": {
